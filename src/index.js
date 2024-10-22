@@ -1,17 +1,15 @@
 /**********************************************************
  * 1  Import_Modules
- * 1.1 Validating script for advertisement
- * 2  CREATE_THE_DISCORD_BOT_CLIENT
- * 3  create_the_languages_objects
- * 4  Raise_the_Max_Listeners
- * 5  LOAD_the_BOT_Functions_and_events
- * 6  Login_to_the_Bot
+ * 2  Create Discord Bot Client
+ * 3  Create languages
+ * 4  Login The Bot
  *
  *   BOT CODED BY: Don_oso005
  *********************************************************/
 
+
 /**********************************************************
- * @param {1} Import_Modules for this File
+ * Import Modules
  *********************************************************/
 const Discord = require("discord.js");
 const config = require("../botconfig/config.json");
