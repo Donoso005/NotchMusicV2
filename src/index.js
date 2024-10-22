@@ -80,9 +80,7 @@ client.lang.init({
 /**********************************************************
  * Load Handlers And Events
  *********************************************************/
-const handlers = fs
-  .readdirSync("./src/handlers")
-  .filter((file) => file.endsWith("js"));
+//const handlers = fs.readdirSync("./src/handlers").filter((file) => file.endsWith("js"));
 const eventsPath = path.join(__dirname, "events");
 const events = fs
   .readdirSync("./src/events")
@@ -101,10 +99,22 @@ for (const file of events) {
 /**********************************************************
  * Load Logger
  *********************************************************/
-client.logger.info = (data) => {
-  let logstring = `${String(`NotchMusic Logs`).brightGreen}${` | `.grey}${
-    `${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.cyan
-  }${` [::] `.magenta}`;
+client.info = (data, status) => {
+  let logstring;
+  switch (status) {
+    case "error":
+      logstring = `${String(`NotchMusic Error`).brightRed}${` | `.grey}${`${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.red}${` [::] `.magenta}`;
+      break;
+    case "warn":
+      logstring = `${String(`NotchMusic Warn`).brightYellow}${` | `.grey}${`${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.yellow}${` [::] `.magenta}`;
+      break;
+    case "success":
+      logstring = `${String(`NotchMusic Success`).brightGreen}${` | `.grey}${`${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.green}${` [::] `.magenta}`;
+      break;
+    default:
+      logstring = `${String(`NotchMusic Info`).brightBlue}${` | `.grey}${`${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.cyan}${` [::] `.magenta}`;
+  }
+  
   if (typeof data == "string") {
     console.log(
       logstring,
@@ -122,12 +132,16 @@ client.logger.info = (data) => {
   }
 };
 
+let logstring = `${String(`NotchMusic ERROR`).red}${` | `.grey}${
+  `${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.cyan
+}${` [::] `.red}`;
+
 client.logger = winston.createLogger({
-  level: "info",
+  level: "error",
   format: winston.format.combine(
     winston.format.colorize(),
-    winston.format.printf(({ timestamp, level, message }) => {
-      return `${message}`;
+    winston.format.printf(({ message }) => {
+      return `${logstring}${message.split("\n").map((d) => `${d}`.red).join(`\n${logstring} `)}`;
     })
   ),
   transports: [

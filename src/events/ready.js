@@ -6,11 +6,7 @@ module.exports = {
 	once: true,
 	execute(client) {
         try {
-
-        } catch(e) {
-            
-        }
-		client.logger(
+          client.info(
             `Bot User: `.brightBlue + `${client.user.tag}`.blue + `\n` +
             `Guild(s): `.brightBlue + `${client.guilds.cache.size} Servers`.blue + `\n` +
             `Watching: `.brightBlue + `${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0)} Members`.blue + `\n` +
@@ -19,7 +15,11 @@ module.exports = {
             `Discord.js: `.brightBlue + `v${Discord.version}`.blue + `\n` +
             `Node.js: `.brightBlue + `${process.version}`.blue + `\n` +
             `Plattform: `.brightBlue + `${process.platform} ${process.arch}`.blue + `\n` +
-            `Memory: `.brightBlue + `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB / ${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB`.blue
+            `Memory: `.brightBlue + `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB / ${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB`.blue, "info"
           );
+          client.info(`Logged in as ${client.user.tag}`, "success");
+        } catch(e) {
+          client.logger.error("There was an error trying to shows clientinfo" + e);
+        }
 	},
 };
