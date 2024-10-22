@@ -1,0 +1,9 @@
+{
+  "name": "NotchMusicV2",
+  "version": "1.0.0",
+  "description": "A music Discord Bot Player",
+  "main": "main.js",
+  "repository": "https://github.com/Donoso005/NotchMusicV2",
+  "author": "Donoso005 <donoso005.developer@gmail.com>",
+  "license": "MIT"
+}
