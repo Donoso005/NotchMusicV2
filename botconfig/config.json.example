@@ -1,0 +1,18 @@
+{
+   "bot" : {
+      "token": "",
+      "clientId": "",
+      "clientSecret": ""
+   },
+
+   "status": {
+      "afk": false,
+      "status": "online",
+      "activity": {
+         "name": "?help | for list of commands | NotchDevelopment",
+         "type": "Listening"
+      }
+   },
+
+   "prefix": "?"
+}
