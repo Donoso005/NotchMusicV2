@@ -51,15 +51,21 @@ const client = new Discord.Client({
 });
 
 /**********************************************************
+ * Create Variables
+ *********************************************************/
+client.slashCommands = new Discord.Collection();
+client.commands = new Discord.Collection();
+
+/**********************************************************
  * Create languages
  *********************************************************/
 
-client.la = {};
+la = {};
 
 var langs = fs.readdirSync("./src/languages");
 
 for (const langu of langs.filter((file) => file.endsWith(".json"))) {
-  client.la[
+  la[
     `${langu.split(".json").join("")}`
   ] = require(`./languages/${langu}`);
 }
@@ -69,52 +75,41 @@ client.lang.init({
   lng: "en",
   resources: {
     en: {
-      translation: client.la["en"],
+      translation: la["en"],
     },
     es: {
-      translation: client.la["es"],
+      translation: la["es"],
     },
   },
 });
 
 /**********************************************************
- * Load Handlers And Events
- *********************************************************/
-//const handlers = fs.readdirSync("./src/handlers").filter((file) => file.endsWith("js"));
-const eventsPath = path.join(__dirname, "events");
-const events = fs
-  .readdirSync("./src/events")
-  .filter((file) => file.endsWith("js"));
-
-for (const file of events) {
-  const filePath = path.join(eventsPath, file);
-  const event = require(filePath);
-  if (event.once) {
-    client.once(event.name, (...args) => event.execute(...args));
-  } else {
-    client.on(event.name, (...args) => event.execute(...args));
-  }
-}
-
-/**********************************************************
  * Load Logger
  *********************************************************/
-client.info = (data, status) => {
+client.logger = (data, status) => {
   let logstring;
   switch (status) {
     case "error":
-      logstring = `${String(`NotchMusic Error`).brightRed}${` | `.grey}${`${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.red}${` [::] `.magenta}`;
+      logstring = `${String(`NotchMusic Error`).brightRed}${` | `.grey}${
+        `${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.red
+      }${` [::] `.magenta}`;
       break;
     case "warn":
-      logstring = `${String(`NotchMusic Warn`).brightYellow}${` | `.grey}${`${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.yellow}${` [::] `.magenta}`;
+      logstring = `${String(`NotchMusic Warn`).brightYellow}${` | `.grey}${
+        `${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.yellow
+      }${` [::] `.magenta}`;
       break;
     case "success":
-      logstring = `${String(`NotchMusic Success`).brightGreen}${` | `.grey}${`${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.green}${` [::] `.magenta}`;
+      logstring = `${String(`NotchMusic Success`).brightGreen}${` | `.grey}${
+        `${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.green
+      }${` [::] `.magenta}`;
       break;
     default:
-      logstring = `${String(`NotchMusic Info`).brightBlue}${` | `.grey}${`${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.cyan}${` [::] `.magenta}`;
+      logstring = `${String(`NotchMusic Info`).brightBlue}${` | `.grey}${
+        `${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.cyan
+      }${` [::] `.magenta}`;
   }
-  
+
   if (typeof data == "string") {
     console.log(
       logstring,
@@ -132,22 +127,77 @@ client.info = (data, status) => {
   }
 };
 
-let logstring = `${String(`NotchMusic ERROR`).red}${` | `.grey}${
-  `${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.cyan
-}${` [::] `.red}`;
+/**********************************************************
+ * Load Handlers And Events
+ *********************************************************/
+//const handlers = fs.readdirSync("./src/handlers").filter((file) => file.endsWith("js"));
+const eventsPath = path.join(__dirname, "events");
+const events = fs
+  .readdirSync("./src/events")
+  .filter((file) => file.endsWith("js"));
 
-client.logger = winston.createLogger({
-  level: "error",
-  format: winston.format.combine(
-    winston.format.colorize(),
-    winston.format.printf(({ message }) => {
-      return `${logstring}${message.split("\n").map((d) => `${d}`.red).join(`\n${logstring} `)}`;
-    })
-  ),
-  transports: [
-    new winston.transports.Console(),
-  ],
+for (const file of events) {
+  const filePath = path.join(eventsPath, file);
+  const event = require(filePath);
+  if (event.once) {
+    client.once(event.name, (...args) => event.execute(client, ...args));
+  } else {
+    client.on(event.name, (...args) => event.execute(client, ...args));
+  }
+}
+
+
+/**********************************************************
+ * Register Commands
+ *********************************************************/
+const { REST, Routes } = require("discord.js");
+
+const commands = [];
+
+fs.readdirSync("./src/commands/").forEach((dir) => {
+  const commandsPath = path.join(__dirname, "commands", dir);
+  const commandsFiles = fs
+    .readdirSync(commandsPath)
+    .filter((file) => file.endsWith("js"));
+
+  for (const file of commandsFiles) {
+    const filePath = path.join(commandsPath, file);
+    const command = require(filePath);
+    if ("data" in command && "execute" in command) {
+      commands.push(command.data.toJSON());
+      client.slashCommands.set(command.data.name, command);
+    } else {
+      client.logger(
+        `The command at ${filePath} is missing a required "data" or "execute" property.`,
+        "warn"
+      );
+    }
+    client.logger(`Loaded slash command ${file}`, "success")
+  }
 });
+
+const rest = new REST().setToken(config.bot.token);
+
+(async () => {
+  try {
+    client.logger(
+      `Refreshing ${commands.length} Slash commands.`
+    );
+
+    // The put method is used to fully refresh all commands in the guild with the current set
+    const data = await rest.put(Routes.applicationCommands(config.bot.clientId), {
+      body: commands,
+    });
+
+    client.logger(
+      `Reloaded ${data.length} Slash commands.`,
+      "success"
+    );
+  } catch (error) {
+    client.logger(error, "error");
+  }
+})();
+
 
 /**********************************************************
  * Login The Bot

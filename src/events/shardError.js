@@ -4,6 +4,6 @@ const config = require("../../botconfig/config.json");
 module.exports = {
     name: Discord.Events.ShardError,
     execute(client, id) {
-        client.info(`Shard #${id} Errored` ,"error");
+        client.logger(`Shard #${id} Errored` ,"error");
     }
 }

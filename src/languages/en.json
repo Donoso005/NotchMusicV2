@@ -1,5 +1,9 @@
 {
     "cmds": {
-        "botinfo": "dsfsdf"
+        "errorCommand": "{emoji} An error occurred while executing this command. Please try again later.",
+        "ping": {
+            "text": "{emoji}  Checking the latency of the bot.",
+            "text2": "{emoji_bot} Bot Ping: `{botping}ms`\n\n{emoji_host} Host Ping: `{ping}`ms\n\n{emoji_api} Api Latency: `{wsping}ms`"
+        }
     }   
 }

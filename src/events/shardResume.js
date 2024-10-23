@@ -4,6 +4,6 @@ const config = require("../../botconfig/config.json");
 module.exports = {
     name: Discord.Events.ShardError,
     execute(client, id) {
-        client.logger(`Reconnecting at `, "warn");
+        client.logger(`Shard #${id} resumed`, "success");
     }
 }
