@@ -33,5 +33,14 @@ function msgConverter(text, options) {
     return text;
 }
 
+function checkBotPerms(interaction) {
+    var missingPerm = null;
+
+
+
+
+    return missingPerm;
+}
+
 module.exports.msgConverter = msgConverter;
 module.exports.embedCreator = embedCreator;

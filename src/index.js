@@ -56,6 +56,7 @@ const client = new Discord.Client({
  *********************************************************/
 client.slashCommands = new Discord.Collection();
 client.commands = new Discord.Collection();
+client.cooldowns = new Discord.Collection();
 
 /**********************************************************
  * Load languages
@@ -84,44 +85,44 @@ module.exports = loadLanguages;
 lang = loadLanguages();
 
 client.logger = (data, status, type) => {
-  if (type == null) type = "::";
   if (status == null) status = "info";
+  if(type == null) type = "log";
 
   switch (status) {
     case "error":
       logstring = `${
         `${msgConverter(`${lang[settingsConsole.lang].console.loggerHeader}`, {
-          status: "error",
+          status: lang[settingsConsole.lang].console.status.error,
         })}`.brightRed
       }${`${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.red}${
-        ` [${type}] `.magenta
+        ` [${lang[settingsConsole.lang].console.loggerInfo[type]}] `.magenta
       }`;
       break;
     case "warn":
       logstring = `${
         `${msgConverter(`${lang[settingsConsole.lang].console.loggerHeader}`, {
-          status: "warn",
+          status: lang[settingsConsole.lang].console.status.warn,
         })}`.brightYellow
       }${`${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.yellow}${
-        ` [${type}] `.magenta
+        ` [${lang[settingsConsole.lang].console.loggerInfo[type]}] `.magenta
       }`;
       break;
     case "success":
       logstring = `${
         `${msgConverter(`${lang[settingsConsole.lang].console.loggerHeader}`, {
-          status: "success",
+          status: lang[settingsConsole.lang].console.status.success,
         })}`.brightGreen
       }${`${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.green}${
-        ` [${type}] `.magenta
+        ` [${lang[settingsConsole.lang].console.loggerInfo[type]}] `.magenta
       }`;
       break;
     default:
       logstring = `${
         `${msgConverter(`${lang[settingsConsole.lang].console.loggerHeader}`, {
-          status: "info",
+          status: lang[settingsConsole.lang].console.status.info,
         })}`.brightBlue
       }${`${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.cyan}${
-        ` [${type}] `.magenta
+        ` [${lang[settingsConsole.lang].console.loggerInfo[type]}] `.magenta
       }`;
   }
 
@@ -161,7 +162,7 @@ fs.readdirSync("./src/events/").forEach((dir) => {
     } else {
       client.on(event.name, (...args) => event.execute(client, ...args));
     }
-    client.logger(`Loaded event ${file}`, "success", "Events");
+    client.logger(`Loaded event ${file}`, "success", "event");
   }
 });
 
@@ -184,11 +185,11 @@ fs.readdirSync("./src/commands/").forEach((dir) => {
     if ("data" in command && "execute" in command) {
       commands.push(command.data.toJSON());
       client.slashCommands.set(command.data.name, command);
-      client.logger(`Loaded slash command ${file}`, "success", "Commands");
+      client.logger(`Loaded slash command ${file}`, "success", "command");
     } else {
       client.logger(
-        `The command at ${filePath} is missing a required "data" or "execute" property.`,
-        "warn"
+        `The command ${file} is missing a required "data" or "execute" property.`,
+        "warn", "command"
       );
     }
   }
@@ -198,7 +199,7 @@ const rest = new REST().setToken(config.bot.token);
 
 (async () => {
   try {
-    client.logger(`Refreshing ${commands.length} Slash commands.`);
+    client.logger(`Refreshing ${commands.length} Slash commands.`, "info", "command");
 
     // The put method is used to fully refresh all commands in the guild with the current set
     const data = await rest.put(
@@ -208,7 +209,7 @@ const rest = new REST().setToken(config.bot.token);
       }
     );
 
-    client.logger(`Reloaded ${data.length} Slash commands.`, "success");
+    client.logger(`Reloaded ${data.length} Slash commands.`, "success", "command");
   } catch (error) {
     client.logger(error, "error");
   }

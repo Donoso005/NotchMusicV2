@@ -14,11 +14,18 @@ const {
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("ping")
-    .setDescription("Shows the latency of the bot"),
+  .setName('ping')
+  .setNameLocalizations({
+      'en-US': lang['en'].cmds.info.ping.name,
+      'es-ES': lang['es'].cmds.info.ping.name,
+  })
+  .setDescription("Shows the latency of the bot")
+  .setDescriptionLocalizations({
+      'en-US': lang['en'].cmds.info.ping.description,
+      'es-ES': lang['es'].cmds.info.ping.description,
+  }),
   category: "Info",
-  description: "Shows the latency of the bot",
-  cooldown: 5,
+  cooldown: 10,
 
   async execute(interaction, client) {
     let oldate = new Date().getMilliseconds();

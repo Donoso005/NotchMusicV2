@@ -1,6 +1,10 @@
 {
     "cmds": {
         "errorCommand": "{emoji} Ha ocurrido un error al ejecutar este comando. Por favor intentelo de nuevo más tarde.",
+        "cooldown": {
+            "title": "Enfriamiento",
+            "description": "Estas en enfriamiento, puedes usar el comando {cooldownTime}."
+        },
         "admin": {
             "ban": {
                 "name": "ban",
@@ -9,9 +13,40 @@
         },
         "info": {
             "ping": {
+                "name": "ping",
+                "description": "Muestra la latencia del bot",
                 "text": "{emoji}  Comprobando la latencia del bot.",
                 "text2": "{emoji_bot} Bot Ping: `{botping}ms`\n\n{emoji_host} Host Ping: `{ping}`ms\n\n{emoji_api} Api Latencia: `{wsping}ms`"
+            },
+            "botinfo": {
+                "name": "botinfo",
+                "description": "Muestra información del bot",
+                "field1Key": "Bot Usuario",
+                "field2Key": "Servidor(es)",
+                "field3Key": "Viendo",
+                "field4Key": "Prefijo",
+                "field5Key": "Commandos",
+                "field6Key": "Discord.js",
+                "field7Key": "Node.js",
+                "field8Key": "Plataforma",
+                "field9Key": "Memoria",
+                "field10Key": "Actividad"
             }
+        }
+    },
+    "console": {
+        "loggerHeader": "NotchMusic {status} | ",
+        "status": {
+            "info": "Info",
+            "warn": "Alerta",
+            "success": "Exito",
+            "error": "Error"
+        },
+        "loggerInfo": {
+            "command": "Comando",
+            "event": "Evento",
+            "log": "Log",
+            "handler": "Controlador"
         }
     },
     "developer": {

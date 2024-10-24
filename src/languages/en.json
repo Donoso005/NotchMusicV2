@@ -1,16 +1,37 @@
 {
     "cmds": {
         "errorCommand": "{emoji} An error occurred while executing this command. Please try again later.",
+        "cooldown": {
+            "title": "Cooldown",
+            "description": "You are on cooldown, you can use the command {cooldownTime}."
+        },
+
         "admin": {
             "ban": {
                 "name": "ban",
-                "description": "Ban a user from the server."
+                "description": "Bans a user from the guild."
             }
         },
         "info": {
             "ping": {
+                "name": "ping",
+                "description": "Shows the latency of the bot",
                 "text": "{emoji}  Checking the latency of the bot.",
                 "text2": "{emoji_bot} Bot Ping: `{botping}ms`\n\n{emoji_host} Host Ping: `{ping}`ms\n\n{emoji_api} Api Latency: `{wsping}ms`"
+            },
+            "botinfo": {
+                "name": "botinfo",
+                "description": "Shows information about the bot",
+                "field1Key": "Bot User",
+                "field2Key": "Guild(s)",
+                "field3Key": "Whatching",
+                "field4Key": "Prefix",
+                "field5Key": "Commands",
+                "field6Key": "Discord.js",
+                "field7Key": "Node.js",
+                "field8Key": "Plattform",
+                "field9Key": "Memory",
+                "field10Key": "Uptime"
             }
         }
     },
@@ -21,6 +42,12 @@
             "warn": "Warning",
             "success": "Success",
             "error": "Error"
+        },
+        "loggerInfo": {
+            "command": "Command",
+            "event": "Event",
+            "log": "Log",
+            "handler": "handler"
         }
     },
     "developer": {
