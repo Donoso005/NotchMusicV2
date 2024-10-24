@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const config = require("../../botconfig/config.json");
+const config = require("../../../botconfig/config.json");
 const { MessageEmbed } = require('discord.js');
 const emoji = require(`${process.cwd()}/botconfig/emoji`);
 const embedTemplate = require(`${process.cwd()}/botconfig/embedTemplate`);
@@ -22,7 +22,7 @@ module.exports = {
             client.logger(error.toString(), "error");
             console.log(error);
             const embedInt = embedCreator("ERROR", null, null, msgConverter(
-                client.lang.t('cmds.errorCommand'), {
+                client.lang.cmds.errorCommand, {
                     emoji: emoji.error
                 }
             ), embedTemplate.iconBot, null, null, true, null);

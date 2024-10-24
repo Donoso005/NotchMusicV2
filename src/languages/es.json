@@ -1,5 +1,23 @@
 {
     "cmds": {
-        
-    } 
+        "errorCommand": "{emoji} Ha ocurrido un error al ejecutar este comando. Por favor intentelo de nuevo más tarde.",
+        "admin": {
+            "ban": {
+                "name": "ban",
+                "description": "Banea a un usuario del servidor."
+            }
+        },
+        "info": {
+            "ping": {
+                "text": "{emoji}  Comprobando la latencia del bot.",
+                "text2": "{emoji_bot} Bot Ping: `{botping}ms`\n\n{emoji_host} Host Ping: `{ping}`ms\n\n{emoji_api} Api Latencia: `{wsping}ms`"
+            }
+        }
+    },
+    "developer": {
+        "name": "Don_oso005",
+        "discord": "Don_oso005#don_oso005",
+        "github": "https://github.com/Donoso005"
+    }  
+
 }
